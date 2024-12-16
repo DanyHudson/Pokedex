@@ -1,5 +1,7 @@
 let allPokemonData = []; // Global array to store all Pokémon data
 let displayedCount = 20; // Number of Pokémon currently displayed
+let currentDisplayedId = null; // Store the currently displayed Pokémon ID
+
 
 
 function init() {
@@ -83,7 +85,8 @@ function getTypeColor(type) {
 }
 
 // Function to handle card click
-async function handleCardClick(id, name, index) {
+async function handleCardClick(id, name) {
+    currentDisplayedId = id; // Store the current Pokémon ID
     const pokemonData = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(response => response.json());
     const pokemonImage = pokemonData.sprites.other.home.front_default; // Pokémon image
     const pokemonHeight = pokemonData.height; // Pokémon height
@@ -97,22 +100,24 @@ async function handleCardClick(id, name, index) {
         <strong>Base Experience:</strong> ${pokemonBaseExperience}
     `;
 
-    renderPokePopup(pokemonImage, id, name, pokemonDescription, index);
+    renderPokePopup(pokemonImage, id, name, pokemonDescription);
 }
 
-async function showPrevPokemon(currentIndex) {
-    const prevIndex = currentIndex - 1;
-    if (prevIndex >= 0) {
-        const prevPokemonData = allPokemonData[prevIndex];
-        handleCardClick(prevPokemonData.id, prevPokemonData.name, prevIndex); // Use the fetched Pokémon ID and name
+async function showPrevPokemon() {
+    const prevId = currentDisplayedId - 1; // Get the previous Pokémon ID
+    if (prevId > 0) { // Ensure the ID is valid
+        handleCardClick(prevId, allPokemonData[prevId - 1].name); // Fetch the previous Pokémon
+    } else {
+        console.error('No previous Pokémon available.');
     }
 }
 
-async function showNextPokemon(currentIndex) {
-    const nextIndex = currentIndex + 1;
-    if (nextIndex < allPokemonData.length) { // Ensure it does not exceed the limit of loaded Pokémon
-        const nextPokemonData = allPokemonData[nextIndex]; // Get the next Pokémon data from the global array
-        handleCardClick(nextPokemonData.id, nextPokemonData.name, nextIndex); // Use the fetched Pokémon ID and name
+async function showNextPokemon() {
+    const nextId = currentDisplayedId + 1; // Get the next Pokémon ID
+    if (nextId <= allPokemonData.length) { // Ensure the ID is within bounds
+        handleCardClick(nextId, allPokemonData[nextId - 1].name); // Fetch the next Pokémon
+    } else {
+        console.error('No next Pokémon available.');
     }
 }
 
