@@ -1,6 +1,7 @@
 let allPokemonData = []; // Global array to store all Pokémon data
 let displayedCount = 20; // Number of Pokémon currently displayed
 let currentDisplayedId = null; // Store the currently displayed Pokémon ID
+let modalInstance;
 
 
 
@@ -122,37 +123,54 @@ async function showNextPokemon() {
 }
 
 function renderPokePopup(image, id, name, description, index) {
-    // Create a modal to display the Pokémon card
-    const modal = document.createElement('div');
-    modal.className = 'modal fade';
-    modal.tabIndex = -1;
-    modal.setAttribute('role', 'dialog'); // Set role for accessibility
+    // Check if the modal already exists
+    let modal = document.querySelector('.modal');
 
-    modal.innerHTML = `
-        <div class="modal-dialog" style="margin-top: 10%;"> <!-- Adjust vertical position -->
-            <div class="modal-content" style="border: none;"> <!-- Remove border -->
+    // If the modal doesn't exist, create it
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.tabIndex = -1;
+        modal.setAttribute('role', 'dialog'); // Set role for accessibility
+
+        modal.innerHTML = renderModal(image, id, name, description, index);
+
+        // Append the modal to the body
+        document.body.appendChild(modal);
+
+        // Initialize the modal instance
+        modalInstance = new bootstrap.Modal(modal, {
+            backdrop: true, // Allow closing the modal by clicking outside
+            keyboard: false // Prevent closing the modal with the keyboard
+        });
+
+        // Remove the modal from the DOM after it's closed
+        modal.addEventListener('hidden.bs.modal', function () {
+            modal.remove();
+            modalInstance = null; // Reset the modal instance
+        });
+    } else {
+        // If the modal already exists, update its content
+        modal.querySelector('.modal-content').innerHTML = `
+            ${renderModalHeader(id, name, index)}
+            ${renderModalBody(image, description)}
+        `;
+    }
+
+    // Show the modal
+    modalInstance.show();
+}
+
+function renderModal(image, id, name, description, index) {
+    return `
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <div class="modal-content" style="border: none;">
                 ${renderModalHeader(id, name, index)}
                 ${renderModalBody(image, description)}
             </div>
         </div>
     `;
-
-    // Append the modal to the body
-    document.body.appendChild(modal);
-
-    // Show the modal
-    const modalInstance = new bootstrap.Modal(modal, {
-        backdrop: true, // Allow closing the modal by clicking outside
-        keyboard: false // Prevent closing the modal with the keyboard
-    });
-    modalInstance.show();
-
-    // Remove the modal from the DOM after it's closed
-    modal.addEventListener('hidden.bs.modal', function () {
-        modal.remove();
-    });
 }
-
 
 async function loadMorePokemon() {
     const data = await fetchPokemonData(); // Fetch the Pokémon data
