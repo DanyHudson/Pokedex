@@ -1,12 +1,11 @@
+
+
 function renderPokemonCard(id, name, image, types) {
-    // Get the container where the cards will be displayed
     const container = document.getElementById('pokemon-container');
 
-    // Create a new card element
     const card = document.createElement('div');
-    card.className = 'pokemon-card'; // Add a class for styling (optional)
+    card.className = 'pokemon-card';
 
-    // Create the content for the card
     card.innerHTML = `
         <span class="pokeIdName">No.${id} ${name}</span>
         <img src="${image}" alt="${name}" />
@@ -15,21 +14,29 @@ function renderPokemonCard(id, name, image, types) {
         </div>
     `;
 
-    // Add an onclick event listener to the card
-    card.onclick = function() {
-        handleCardClick(id, name); // Call a function to handle the click event
+    card.onclick = function () {
+        handleCardClick(id, name);
     };
 
-    // Append the card to the container
     container.appendChild(card);
+}
+function renderModal(image, id, name, description, index) {
+    return `
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <div class="modal-content" style="border: none;">
+                ${renderModalHeader(id, name, index)}
+                ${renderModalBody(image, description)}
+            </div>
+        </div>
+    `;
 }
 
 function renderModalHeader(id, name) {
     return `
         <div class="modal-header" style="border: none;"> 
-            <button class="prevPokemn" type="button" onclick="showPrevPokemon()" style="border-radius: 50%;"><img src="/img/prev.svg"></button> 
+            <button class="prevPokemn" type="button" onclick="showPrevPokemon()" style="border-radius: 50%;"><img src="./img/prev.svg"></button> 
             <h5 class="modal-title text-center" style="width: 100%;">No.${id} ${name.charAt(0).toUpperCase() + name.slice(1)}</h5> 
-            <button class="nextPokemn" type="button" onclick="showNextPokemon()" style="border-radius: 50%;"><img src="/img/next.svg"></button>
+            <button class="nextPokemn" type="button" onclick="showNextPokemon()" style="border-radius: 50%;"><img src="./img/next.svg"></button>
         </div>
     `;
 }
