@@ -2,10 +2,8 @@
 
 function renderPokemonCard(id, name, image, types) {
     const container = document.getElementById('pokemon-container');
-
     const card = document.createElement('div');
     card.className = 'pokemon-card';
-
     card.innerHTML = `
         <span class="pokeIdName">No.${id} ${name}</span>
         <img src="${image}" alt="${name}" />
@@ -20,6 +18,7 @@ function renderPokemonCard(id, name, image, types) {
 
     container.appendChild(card);
 }
+
 function renderModal(image, id, name, description, index) {
     return `
         <div class="modal-dialog" style="margin-top: 10%;">

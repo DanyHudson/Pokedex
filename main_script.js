@@ -1,38 +1,30 @@
-let allPokemonData = []; // Global array to store all Pokémon data
-let displayedCount = 20; // Number of Pokémon currently displayed
-let maxPokemonCount = 100; // Define a maximum limit for Pokémon to be fetched
-let currentDisplayedId = null; // Store the currently displayed Pokémon ID
+let allPokemonData = [];
+let displayedCount = 20;
+let maxPokemonCount = 100; 
+let currentDisplayedId = null;
 let modalInstance;
 
-
-
 function init() {
-    // Show the loading screen when the page starts loading
-    document.getElementById('loading-screen').style.display = 'flex'; // Ensure the loading screen is visible
-
-    // Fetch and display Pokémon cards
+    document.getElementById('loading-screen').style.display = 'flex';
     displayPokemonCards().then(() => {
-        // Hide the loading screen once the Pokémon cards are displayed
         hideLoadingScreen();
     });
 }
+
 function hideLoadingScreen() {
     const loadingScreen = document.getElementById('loading-screen');
-    if (loadingScreen) { // Check if the loading screen exists
-        loadingScreen.style.display = 'none'; // Hide the loading screen
-        loadingScreen.remove(); // Remove it from the DOM
+    if (loadingScreen) {
+        loadingScreen.style.display = 'none';
+        loadingScreen.remove(); 
     }
 }
 
-// Listen for the window load event
 window.addEventListener('load', () => {
-    // Hide the loading screen when the window has fully loaded
     hideLoadingScreen();
 });
 
 async function fetchPokemonData() {
     const url = `https://pokeapi.co/api/v2/pokemon?limit=${Math.min(displayedCount, maxPokemonCount)}&offset=0`;
-
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -48,48 +40,39 @@ async function fetchPokemonData() {
 
 function initializeSearch() {
     const searchBar = document.getElementById('searchBar');
-
     searchBar.addEventListener('input', function () {
-        const searchTerm = searchBar.value.toLowerCase(); // Get the search term in lowercase
+        const searchTerm = searchBar.value.toLowerCase();
         const filteredPokemon = allPokemonData.filter(pokemon => {
-            const pokemonName = pokemon.name.toLowerCase(); // Convert Pokémon name to lowercase
-            const pokemonId = pokemon.id.toString(); // Convert Pokémon ID to string
-            return pokemonName.includes(searchTerm) || pokemonId.includes(searchTerm); // Check if name or ID includes the search term
+            const pokemonName = pokemon.name.toLowerCase();
+            const pokemonId = pokemon.id.toString();
+            return pokemonName.includes(searchTerm) || pokemonId.includes(searchTerm);
         });
-
-        // Clear the current displayed Pokémon
-        clearPokemonDisplay(); // Function to clear currently displayed Pokémon
-
-        // Call the new function to render only the first matching Pokémon
+        clearPokemonDisplay();
         renderOnlyFirstMatch(filteredPokemon);
     });
 }
 
-// Function to clear currently displayed Pokémon (you need to implement this)
 function clearPokemonDisplay() {
-    const pokemonContainer = document.getElementById('pokemon-container'); // Assuming you have a container for Pokémon cards
+    const pokemonContainer = document.getElementById('pokemon-container');
     while (pokemonContainer.firstChild) {
-        pokemonContainer.removeChild(pokemonContainer.firstChild); // Remove all child elements (Pokémon cards)
+        pokemonContainer.removeChild(pokemonContainer.firstChild);
     }
 
 }
 function renderOnlyFirstMatch(filteredPokemon) {
     if (filteredPokemon.length > 0) {
-        const pokemon = filteredPokemon[0]; // Get the first matching Pokémon
-        const pokemonId = pokemon.id; // Pokémon ID
-        const pokemonName = capitalizeFirstLetter(pokemon.name); // Capitalize the first letter of the Pokémon name
-        const pokemonImage = pokemon.sprites.other.home.front_default; // Pokémon image
-        const types = getPokeTypes(pokemon.types); // Call the new function to get types
-
-        renderPokemonCard(pokemonId, pokemonName, pokemonImage, types); // Render the filtered Pokémon
+        const pokemon = filteredPokemon[0];
+        const pokemonId = pokemon.id; 
+        const pokemonName = capitalizeFirstLetter(pokemon.name); 
+        const pokemonImage = pokemon.sprites.other.home.front_default;
+        const types = getPokeTypes(pokemon.types); 
+        renderPokemonCard(pokemonId, pokemonName, pokemonImage, types); 
     }
 }
 
 
 // Call the initializeSearch function when the page loads
 document.addEventListener('DOMContentLoaded', initializeSearch);
-
-
 
 async function displayPokemonCards() {
     const data = await fetchPokemonData();
@@ -100,26 +83,24 @@ async function displayPokemonCards() {
             const pokemonUrl = results[i].url;
             const pokemonData = await fetch(pokemonUrl).then(response => response.json());
 
-            // Call the new function to process the Pokémon data
             processPokemonData(pokemonData, i);
         }
     }
 }
 
 function processPokemonData(pokemonData, index) {
-    allPokemonData.push(pokemonData); // Store the Pokémon data in the global array
+    allPokemonData.push(pokemonData);
 
-    if (index < displayedCount) { // Only render the first 'displayedCount' Pokémon
-        const pokemonId = pokemonData.id; // Pokémon ID
-        const pokemonName = capitalizeFirstLetter(pokemonData.name); // Capitalize the first letter of the Pokémon name
-        const pokemonImage = pokemonData.sprites.other.home.front_default; // Pokémon image
-        const types = getPokeTypes(pokemonData.types); // Call the new function to get types
+    if (index < displayedCount) {
+        const pokemonId = pokemonData.id;
+        const pokemonName = capitalizeFirstLetter(pokemonData.name); 
+        const pokemonImage = pokemonData.sprites.other.home.front_default; 
+        const types = getPokeTypes(pokemonData.types); 
 
         renderPokemonCard(pokemonId, pokemonName, pokemonImage, types);
     }
 }
 
-// Utility function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -155,15 +136,13 @@ function getTypeColor(type) {
     return colors[type] || '#FFFFFF';
 }
 
-// Function to handle card click
 async function handleCardClick(id, name) {
-    currentDisplayedId = id; // Store the current Pokémon ID
+    currentDisplayedId = id; 
     const pokemonData = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(response => response.json());
     const pokemonImage = pokemonData.sprites.other.home.front_default;
     const pokemonHeight = pokemonData.height;
     const pokemonWeight = pokemonData.weight;
     const pokemonBaseExperience = pokemonData.base_experience;
-
     const pokemonDescription = `
         <strong>Height:</strong> ${pokemonHeight / 10} m<br>
         <strong>Weight:</strong> ${pokemonWeight / 10} kg<br>
@@ -174,18 +153,18 @@ async function handleCardClick(id, name) {
 }
 
 async function showPrevPokemon() {
-    const prevId = currentDisplayedId - 1; // Get the previous Pokémon ID
-    if (prevId > 0) { // Ensure the ID is valid
-        handleCardClick(prevId, allPokemonData[prevId - 1].name); // Fetch the previous Pokémon
+    const prevId = currentDisplayedId - 1;
+    if (prevId > 0) {
+        handleCardClick(prevId, allPokemonData[prevId - 1].name); 
     } else {
         console.error('No previous Pokémon available.');
     }
 }
 
 async function showNextPokemon() {
-    const nextId = currentDisplayedId + 1; // Get the next Pokémon ID
-    if (nextId <= allPokemonData.length) { // Ensure the ID is within bounds
-        handleCardClick(nextId, allPokemonData[nextId - 1].name); // Fetch the next Pokémon
+    const nextId = currentDisplayedId + 1;
+    if (nextId <= allPokemonData.length) {
+        handleCardClick(nextId, allPokemonData[nextId - 1].name); 
     } else {
         console.error('No next Pokémon available.Load more Pokemon');
     }
@@ -236,10 +215,9 @@ async function loadMorePokemon() {
         const data = await response.json();
         const results = data.results;
 
-        // Call the new function to process the Pokémon data
         await morePokemonData(results);
 
-        displayedCount += results.length; // Update displayedCount based on how many were loaded
+        displayedCount += results.length;
     } catch (error) {
         console.error('Error loading more Pokémon:', error);
     }
@@ -250,12 +228,12 @@ async function morePokemonData(results) {
         const pokemonUrl = results[i].url;
         const pokemonData = await fetch(pokemonUrl).then(response => response.json());
 
-        allPokemonData.push(pokemonData); // Store the Pokémon data in the global array
+        allPokemonData.push(pokemonData);
 
-        const pokemonId = pokemonData.id; // Pokémon ID
-        const pokemonName = capitalizeFirstLetter(pokemonData.name); // Capitalize the first letter of the Pokémon name
-        const pokemonImage = pokemonData.sprites.other.home.front_default; // Pokémon image
-        const types = getPokeTypes(pokemonData.types); // Call the new function to get types
+        const pokemonId = pokemonData.id; 
+        const pokemonName = capitalizeFirstLetter(pokemonData.name);
+        const pokemonImage = pokemonData.sprites.other.home.front_default;
+        const types = getPokeTypes(pokemonData.types); 
 
         renderPokemonCard(pokemonId, pokemonName, pokemonImage, types);
     }
@@ -267,9 +245,10 @@ function renderLoadMoreButton() {
     loadMoreButton.innerText = 'Load More Pokémon';
     loadMoreButton.className = 'loadMore';
     loadMoreButton.onclick = loadMorePokemon;
-    //document.body.appendChild(loadMoreButton);  Append the button to the body or a specific container
     buttonContainer.appendChild(loadMoreButton);
 }
 
-// Call this function after displaying the initial Pokémon cards
+
 renderLoadMoreButton();
+
+
