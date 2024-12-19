@@ -13,12 +13,16 @@
 </head>
 
 <body onload="init()">
+
+    <div id="loading-screen" class="loading-screen"><img class="loader" src="./img/loading_pokeball.svg">
+        <p>Loading...</p>
     </div>
-    <nav class="navbar bg-body-tertiary logo-ontainer">
-        <div class="container">
-            <a class="navbar-brand  " href="#">
-                <img class="logo"  src="./img/International_Pokémon_logo.svg" width="30" height="24">
+    <nav class="navbar bg-body-tertiary logo-container">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a  href="#">
+                <img class="logo" src="./img/International_Pokémon_logo.svg" width="30" height="24">
             </a>
+            <input type="text" id="searchBar" placeholder="Search Pokémon..." class="search-bar">
         </div>
     </nav>
 

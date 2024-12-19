@@ -34,9 +34,9 @@ function renderModal(image, id, name, description, index) {
 function renderModalHeader(id, name) {
     return `
         <div class="modal-header" style="border: none;"> 
-            <button class="prevPokemn" type="button" onclick="showPrevPokemon()" style="border-radius: 50%;"><img src="./img/prev.svg"></button> 
+            <button class="prevPokemn" type="button" onclick="showPrevPokemon()"><img src="./img/prev.svg"></button> 
             <h5 class="modal-title text-center" style="width: 100%;">No.${id} ${name.charAt(0).toUpperCase() + name.slice(1)}</h5> 
-            <button class="nextPokemn" type="button" onclick="showNextPokemon()" style="border-radius: 50%;"><img src="./img/next.svg"></button>
+            <button class="nextPokemn" type="button" onclick="showNextPokemon()"><img src="./img/next.svg"></button>
         </div>
     `;
 }

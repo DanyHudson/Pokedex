@@ -1,27 +1,52 @@
-.loader {
-
+.loading-screen {
     position: fixed;
     top: 0;
     left: 0;
-    width: 80vw;
-    height: 80vh;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    transition: opacity 0.75s, visibility 0.75s;
+    align-items: center;
+    z-index: 9999; /* Ensure it appears above other content */
 }
 
+.loader {
+    width: 40%; /* Adjust size as needed */
+    height: 40%; /* Adjust size as needed */
+    animation: spin 1s linear infinite; /* Add spinning animation */
+}
 
-.logo-ontainer {
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.logo-container {
     width: 100%;
     height: 120px;
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.32);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.16);
 }
 
 .logo {
     width: 80%;
     height: auto;
 
+}
+
+.search-bar {
+    border: 6px solid #3c5aa6; /* Same border color as the load more button */
+    border-radius: 8px; /* Same border radius as the load more button */
+    padding: 8px 16px; /* Padding for the search bar */
+    font-weight: bold; /* Bold text */
+    color: #3c5aa6; /* Text color */
+    outline: none; /* Remove outline on focus */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Optional shadow for aesthetics */
+}
+
+.search-bar::placeholder {
+    color: #3c5aa6; /* Placeholder text color */
 }
 
 .card-header,
@@ -35,7 +60,7 @@
     flex-wrap: wrap;
     gap: 40px;
     justify-content: center;
-    margin-top: 24px;
+    margin-top: 32px;
 }
 
 .pokemon-card {
@@ -115,6 +140,7 @@
 .nextPokemn {
     border: none;
     background: transparent;
+    width: 40px;
 }
 
 .button-container {
@@ -144,7 +170,25 @@
     animation-iteration-count: 2;
 }
 
-
+@media screen and (max-width: 768px) {
+    .logo-container, .container {
+       display: flex !important; 
+       align-items:center!important;
+       justify-content: center!important;
+       box-shadow: none!important;
+    
+    }
+    
+    nav a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+    #pokemon-container {
+        margin-top: 56px;
+    }
+}
 
 /*  
 */
