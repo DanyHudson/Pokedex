@@ -70,8 +70,6 @@ function renderOnlyFirstMatch(filteredPokemon) {
     }
 }
 
-
-// Call the initializeSearch function when the page loads
 document.addEventListener('DOMContentLoaded', initializeSearch);
 
 async function displayPokemonCards() {
@@ -97,7 +95,10 @@ function processPokemonData(pokemonData, index) {
         const pokemonImage = pokemonData.sprites.other.home.front_default; 
         const types = getPokeTypes(pokemonData.types); 
 
-        renderPokemonCard(pokemonId, pokemonName, pokemonImage, types);
+        const firstType = pokemonData.types[0].type.name; 
+        const backgroundColor = getTypeColor(firstType); 
+
+        renderPokemonCard(pokemonId, pokemonName, pokemonImage, types, backgroundColor); 
     }
 }
 
@@ -173,22 +174,31 @@ async function showNextPokemon() {
 function renderPokePopup(image, id, name, description, index) {
     let modal = document.querySelector('.modal');
     if (!modal) {
-        modal = document.createElement('div');
-        modal.className = 'modal fade';
-        modal.tabIndex = -1;
-        modal.setAttribute('role', 'dialog');
-
-        modal.innerHTML = renderModal(image, id, name, description, index);
-        document.body.appendChild(modal);
-        modalInstance = new bootstrap.Modal(modal, {
-            backdrop: true,
-            keyboard: false
-        });
+        modal = createModal(image, id, name, description, index);
     }
 
     handleModal(modal, image, id, name, description, index);
     modalInstance.show();
+    modal.querySelector('.modal-header').focus();
 }
+
+function createModal(image, id, name, description, index) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.tabIndex = -1;
+    modal.setAttribute('role', 'dialog');
+
+    modal.innerHTML = renderModal(image, id, name, description, index);
+    document.body.appendChild(modal);
+
+    modalInstance = new bootstrap.Modal(modal, {
+        backdrop: true,
+        keyboard: true
+    });
+
+    return modal;
+}
+
 
 function handleModal(modal, image, id, name, description, index) {
     modal.addEventListener('hidden.bs.modal', function () {
@@ -202,10 +212,9 @@ function handleModal(modal, image, id, name, description, index) {
     `;
 }
 
-
 async function loadMorePokemon() {
-    const offset = displayedCount; // Set the offset to the current displayed count
-    const url = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`; // Fetch the next 20 Pokémon
+    const offset = displayedCount;
+    const url = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`;
 
     try {
         const response = await fetch(url);
@@ -235,11 +244,14 @@ async function morePokemonData(results) {
         const pokemonImage = pokemonData.sprites.other.home.front_default;
         const types = getPokeTypes(pokemonData.types); 
 
-        renderPokemonCard(pokemonId, pokemonName, pokemonImage, types);
+        const firstType = pokemonData.types[0].type.name; 
+        const backgroundColor = getTypeColor(firstType); 
+
+        renderPokemonCard(pokemonId, pokemonName, pokemonImage, types, backgroundColor);
     }
 }
 
-function renderLoadMoreButton() {
+/*function renderLoadMoreButton() {
     const buttonContainer = document.getElementById('button-container');
     const loadMoreButton = document.createElement('button');
     loadMoreButton.innerText = 'Load More Pokémon';
@@ -249,6 +261,6 @@ function renderLoadMoreButton() {
 }
 
 
-renderLoadMoreButton();
+renderLoadMoreButton();*/
 
 

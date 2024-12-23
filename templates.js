@@ -1,14 +1,16 @@
 
 
-function renderPokemonCard(id, name, image, types) {
+function renderPokemonCard(id, name, image, types, backgroundColor) {
     const container = document.getElementById('pokemon-container');
     const card = document.createElement('div');
     card.className = 'pokemon-card';
+    card.style.backgroundColor = backgroundColor;
+
     card.innerHTML = `
         <span class="pokeIdName">No.${id} ${name}</span>
-        <img src="${image}" alt="${name}" />
+        <img src="${image}" alt="${name}"/>
         <div class="card-footer">
-            <p>${types}</p> <!-- Render types here -->
+            <p>${types}</p>
         </div>
     `;
 
@@ -51,6 +53,7 @@ function renderModalBody(image, description) {
                     <div class="col-md-8">
                         <div class="card-body">
                             <p class="card-text">${description}</p>
+                            <button><img src="./img/close.svg" alt=""></button>
                         </div>
                     </div>
                 </div>
